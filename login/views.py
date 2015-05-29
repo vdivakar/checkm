@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from login.forms import *
 from django.http import HttpResponse, HttpResponseRedirect
-from login.models import details
-
+from login.models import *
+from django.contrib.auth import authenticate
 # Create your views here.
 
 def register(request):
@@ -37,12 +37,33 @@ def login(request):
 		if form.is_valid():
 			cd=form.cleaned_data
 			d=details()
-			try:
-				d.teamname == cd['name_team']
-				d.password == cd['password_login']
+			usernamme=cd['name_team']
+			password=cd['password_login']
+
+			user=authenticate(username=username, password=password)
+			if user is not None:
+				return HttpResponse("correct")
+			else:
+				return HttpResponse("wrong")
+			'''for d in details.objects:
+				if d.teamname == cd['name_team']:
+					 if d.password == cd['password_login']:
+					 	return HttpResponse("ok... login succesful")
+					 else:
+					 	return HttpResponse("error1")
+				else:
+					return HttpResponse("error2")'''
+
+			'''try:
+				d.teamname == cd['name_team'] 
+				try:
+					d.password == cd['password_login']
+				#d.password == cd['password_login']
+				except:
+					return HttpResponse("error 2")
 			except:
 				return HttpResponse("error")
-			return HttpResponse("ok... login succesful")
+			return HttpResponse("ok... login succesful")'''
 		else:
 			return HttpResponse("invalid form")
 
@@ -50,3 +71,17 @@ def login(request):
 		form = login_form()
 	return render(request, 'login/login.html', {'form':form})
 
+
+def play(request):
+	if request.method=='POST':
+		form=play_form(request.POST)
+		if form.is_valid():
+			cd=form.cleaned_data
+			answer=cd['answer']
+		else:
+			return HttpResponse("invalid0")
+		return HttpResponse("ok")
+
+	else:
+		score=que_data
+	return render(request, 'login/play.html', {'score':score().points, 'que_data':score.objects.all(), 'form':play_form()} )
