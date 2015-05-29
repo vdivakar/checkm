@@ -3,6 +3,8 @@ from login.forms import *
 from django.http import HttpResponse, HttpResponseRedirect
 from login.models import *
 from django.contrib.auth import authenticate
+from django.contrib.auth.models import User
+
 # Create your views here.
 
 def register(request):
@@ -37,10 +39,10 @@ def login(request):
 		if form.is_valid():
 			cd=form.cleaned_data
 			d=details()
-			usernamme=cd['name_team']
+			teamname=cd['name_team']
 			password=cd['password_login']
 
-			user=authenticate(username=username, password=password)
+			user=authenticate(username=teamname, password=password)
 			if user is not None:
 				return HttpResponse("correct")
 			else:
