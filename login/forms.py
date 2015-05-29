@@ -10,6 +10,3 @@ class register_form(forms.Form):
 class login_form(forms.Form):
 	name_team = forms.CharField()
 	password_login = forms.CharField(widget=forms.PasswordInput())
-
-class play_form(forms.Form):
-	answer=forms.CharField(required=False)
