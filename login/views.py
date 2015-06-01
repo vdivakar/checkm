@@ -99,8 +99,10 @@ def play_qn(request, oye):
 			answer=cd['answer']
 			ans=que_data.objects.get(qno=a)
 			if answer == ans.ans:
-				details().team_points+=  100#ans.points
-				return HttpResponseRedirect('/play')
+				m=details().team_points+ans.points
+				details().save()
+				return HttpResponse('your score %s' % m )
+
 			else:
 				return HttpResponseRedirect('/play')
 
