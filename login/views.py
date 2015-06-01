@@ -44,7 +44,7 @@ def login(request):
 
 			user=authenticate(username=username, password=password)
 			if user is not None:
-				return HttpResponse("correct")
+				return HttpResponseRedirect('/play/')
 			else:
 				return HttpResponse("wrong")
 			'''for d in details.objects:
