@@ -7,21 +7,22 @@ class details(models.Model):
 	member1 = models.CharField(max_length=100)
 	member2 = models.CharField(max_length = 100)
 	email = models.EmailField()
-	teamname = models.CharField(max_length=100)
+	username = models.CharField(max_length=100)
 	password = models.CharField(max_length=100)
+	team_points=models.IntegerField(default=5)
 
 	def __unicode__(self):
-		return self.teamname
+		return self.username
 
 	class Meta:
-		ordering =['teamname']
+		ordering =['username']
 
 
 class que_data(models.Model):
 	qno = models.IntegerField()
 	que= models.CharField(max_length=100)
 	ans = models.CharField(max_length=100)
-	points=models.IntegerField(default=100)
+	points=models.IntegerField(default=0)
 
 	def __unicode__(self):
 		#qno="qno"

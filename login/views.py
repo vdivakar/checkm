@@ -16,7 +16,7 @@ def register(request):
 			d.member1 = cd['member1']
 			d.member2 = cd['member2']
 			d.email = cd['email']
-			d.teamname = cd['teamname']
+			d.username = cd['username']
 			d.password = cd['password']
 			try:
 				d.save()
@@ -39,10 +39,10 @@ def login(request):
 		if form.is_valid():
 			cd=form.cleaned_data
 			d=details()
-			teamname=cd['name_team']
-			password=cd['password_login']
+			username=cd['username']
+			password=cd['password']
 
-			user=authenticate(username=teamname, password=password)
+			user=authenticate(username=username, password=password)
 			if user is not None:
 				return HttpResponse("correct")
 			else:
@@ -86,4 +86,27 @@ def play(request):
 
 	else:
 		score=que_data
-	return render(request, 'login/play.html', {'score':score().points, 'que_data':score.objects.all(), 'form':play_form()} )
+	return render(request, 'login/play.html', {'score':details().team_points, 'que_data':score.objects.all(), 'form':play_form()} )
+
+def play_qn(request, oye):
+	a=int(oye)
+	score=que_data
+
+	if request.method=='POST':
+		form=play_form(request.POST)
+		if form.is_valid():
+			cd=form.cleaned_data
+			answer=cd['answer']
+			ans=que_data.objects.get(qno=a)
+			if answer == ans.ans:
+				details().team_points+=  100#ans.points
+				return HttpResponseRedirect('/play')
+			else:
+				return HttpResponseRedirect('/play')
+
+	else:
+		try:
+			x = que_data.objects.get(qno=a)
+		except que_data.DoesNotExist:
+			x = None
+		return render(request, 'login/question.html', {'que':x.que, 'form':play_form(), 'score':details().team_points})#.points, 'q':score.objects.all(), 'a':a})#,"you r on question %s" % a)

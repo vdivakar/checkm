@@ -7,15 +7,18 @@
 your score is : {{score}}
 
 {% for q in que_data %}
+
 <li>
- {{q.que}}   <form action="" method="post">
- 						{{form}}
+
+<button onclick="location.href='http://127.0.0.1:8000/play/{{q.qno}}/'" >Button {{q.qno}}</button>
+ {{q.que}}   
  						
 </li>
 {% endfor %}
-<input type="submit" value="Submit"/>
 
 
 
 </body>
 </html>
+<form action="" method="post">
+ 						{{form}}
