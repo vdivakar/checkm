@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib import admin
+from django.contrib.auth.models import User
+
 
 
 # Create your models here.
@@ -9,10 +11,11 @@ class details(models.Model):
 	email = models.EmailField()
 	username = models.CharField(max_length=100)
 	password = models.CharField(max_length=100)
-	team_points=models.IntegerField(default=5)
+	user=models.ForeignKey(User,unique=True)#, default=4)#extending user model
+	team_points=models.IntegerField(default=0)
 
 	def __unicode__(self):
-		return self.username
+		return self.user.username
 
 	class Meta:
 		ordering =['username']
@@ -22,7 +25,7 @@ class que_data(models.Model):
 	qno = models.IntegerField()
 	que= models.CharField(max_length=100)
 	ans = models.CharField(max_length=100)
-	points=models.IntegerField(default=0)
+	points=models.IntegerField(default=100)
 
 	def __unicode__(self):
 		#qno="qno"
