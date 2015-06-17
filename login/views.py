@@ -20,6 +20,8 @@ def register(request):
 			d.member2 = cd['member2']
 			d.email = cd['email']
 			u.username = cd['username']
+			d.username = cd['username']
+
 			u.set_password(cd['password'])
 			u.email=cd['email']
 			
@@ -89,40 +91,70 @@ def login(request):
 @login_required
 def play(request):
 	u=request.user
+	score=que_data
+	us=details.objects.get(user=u)
+	return render(request, 'login/play.html', {'score':us.team_points, 'que_data':score.objects.all(), 'form':play_form()} )
 
-	if request.method=='POST':
-		form=play_form(request.POST)
-		if form.is_valid():
+
+	#if request.method=='POST':
+	#	form=play_form(request.POST)
+'''		if form.is_valid():
 			cd=form.cleaned_data
 			answer=cd['answer']
 		else:
 			return HttpResponse("invalid0")
-		return HttpResponse("ok")
+		return HttpResponse("ok")'''
 
-	else:
-		score=que_data
-		us=details.objects.get(user=u)
-	return render(request, 'login/play.html', {'score':us.team_points, 'que_data':score.objects.all(), 'form':play_form()} )
-
+	#else:
+	
 @login_required
 def play_qn(request, num):
 	a=int(num)
 	score=que_data
+	ans=que_data.objects.get(qno=a)
+	#if ans.lock==1:
+	#	return HttpResponseRedirect('/play')
+	'''else:
+		ans.lock = 1
+		que_data().save()'''
+	
+	#ws=answered.objects.all()#.get(who= request.user)
+	k=answered.objects.filter(who= request.user)
+	
+	if k.exists():#answered.objects.filter(who= request.user).exists():
+		for ks in k:
+			if ks.attempt==ans.qno:
+				return HttpResponseRedirect('/play')
+				#return HttpResponse("this has been attempted already !!!")
+	'''for w in ws:
+		if w.who.exist():
+			if w.attempt==3:
+				return HttpResponse("3rd has beeen answered already!")
+				'''
+		
+	if request.method=='POST':			
 
-	if request.method=='POST':
 		form=play_form(request.POST)
 		u=request.user
 		team=details.objects.get(user=u)
+		ww=answered()
 		if form.is_valid():
 			cd=form.cleaned_data
 			answer=cd['answer']
 			ans=que_data.objects.get(qno=a)
+			ww.who=u.username
+			ww.attempt=ans.qno
+			ww.save()
+			team.answer=ww
+			
 			if answer == ans.ans:
 				team.team_points+=ans.points
 				team.save()
+				#answered().save()
 				return HttpResponseRedirect('/play')
 
 			else:
+				team.save()
 				return HttpResponseRedirect('/play')
 
 	else:
